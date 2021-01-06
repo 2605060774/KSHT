@@ -21,7 +21,7 @@
                 active-text-color="#ffd04b">
             <el-menu-item index="" style="color:#fff;opacity:1;margin-right: 100px" disabled>培训考试后端系统</el-menu-item>
             <el-menu-item style="margin-left: 100px" index="${pageContext.request.contextPath}/jsps/employeesTest/list.jsp">试题库</el-menu-item>
-            <el-menu-item style="margin-left: 100px" index="${pageContext.request.contextPath}/jsps/Employees/EmployeesTab.jsp">试卷库</el-menu-item>
+            <el-menu-item style="margin-left: 100px" index="${pageContext.request.contextPath}/jsps/Employees/paperbank.jsp">试卷库</el-menu-item>
             <el-menu-item style="margin-left: 100px" index="${pageContext.request.contextPath}/jsps/pc/essay.jsp">组织考试</el-menu-item>
             <el-menu-item style="margin-left: 100px" index="${pageContext.request.contextPath}/jsps/yhy/Shipin.jsp">判卷</el-menu-item>
             <el-menu-item style="margin-left: 100px" index="5">数据统计</el-menu-item>
