@@ -106,5 +106,25 @@
         test_paper.paper_id =#{paperId}
     </select>
 
+<!--展示试卷-->
+    <resultMap id="paperQu" type="PaperQuestions" autoMapping="true">
+        <id property="id" column="id"></id>
+        <association property="allQuestions" javaType="AllQuestions" autoMapping="true">
+            <id property="questionsId" column="questions_id"></id>
+            <collection property="allAnswers" ofType="AllAnswer" autoMapping="true">
+            </collection>
+        </association>
+    </resultMap>
+
+    <select id="PaperQuestions" resultMap="paperQu">
+        select * from paper_questions pq
+        LEFT JOIN all_questions aq on pq.questions_id=aq.questions_id
+        LEFT JOIN all_answer aa on aq.questions_id=aa.questions_id
+        <where>
+            <if test="id!=null and id!=0">
+                and pq.paper_id=#{id}
+            </if>
+        </where>
+    </select>
 
 </mapper>

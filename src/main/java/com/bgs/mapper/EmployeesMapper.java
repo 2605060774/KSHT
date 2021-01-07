@@ -1,5 +1,6 @@
 package com.bgs.mapper;
 
+import com.bgs.pojo.PaperQuestions;
 import com.bgs.pojo.TestPaper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -20,4 +21,6 @@ public interface EmployeesMapper {
     int updateCollectionStatus(@Param("paperId") Integer paperId, @Param("userId") Integer userId);
     //试卷库查询题目数量
     TestPaper selectOneQuestionCountOfQuestionBankByPaperID(@Param("paperId") Integer paperId);
+   //展示试卷
+    List<PaperQuestions> PaperQuestions(@Param("id")Integer paperId);
 }

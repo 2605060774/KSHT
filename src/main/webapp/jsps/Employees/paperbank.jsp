@@ -352,8 +352,8 @@
     }
 
     $("#selpaperquestion").click(function () {
-        var testpaperid = $("#formpaperoid").val()
-        /*window.location.href = "http://localhost:8080/QusetionBank/answer.jsp?testpaperid="+testpaperid;*/
+        var paperId = $("#formpaperoid").val()
+        window.location.href = "http://localhost:8080/jsps/Employees/infoShow.jsp?pa="+paperId
     })
 </script>
 </body>

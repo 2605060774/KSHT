@@ -1,6 +1,7 @@
 package com.bgs.service.Impl;
 
 import com.bgs.mapper.EmployeesMapper;
+import com.bgs.pojo.PaperQuestions;
 import com.bgs.pojo.TestPaper;
 import com.bgs.service.EmployeesService;
 import org.springframework.stereotype.Service;
@@ -38,5 +39,10 @@ public class EmployeesServiceImpl implements EmployeesService {
     @Override
     public TestPaper selectOneQuestionCountOfQuestionBankByPaperID(Integer paperId) {
         return employeesMapper.selectOneQuestionCountOfQuestionBankByPaperID(paperId);
+    }
+
+    @Override
+    public List<PaperQuestions> PaperQuestions(Integer paperId) {
+        return employeesMapper.PaperQuestions(paperId);
     }
 }
