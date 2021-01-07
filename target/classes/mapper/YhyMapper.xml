@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bgs.mapper.YhyMapper">
+
+<!--考试中心-->
+<select id="findKszx" resultType="com.bgs.pojo.Yhy">
+   SELECT paper_id,paper_name,total_score,pass_score,start_time,end_time from test_paper
+   <where>
+       <if test="paperName!=null and paperName!=''">
+           paper_name like '%${paperName}%'
+       </if>
+       <if test="startTime!=null and startTime!=''">
+           and start_time like '%${startTime}%'
+       </if>
+       <if test="endTime!=null and endTime!=''">
+           and end_time like '%${endTime}%'
+       </if>
+   </where>
+</select>
+
+<!--考试详情-->
+<select id="findUser" resultType="com.bgs.pojo.Yhy">
+select user.username,user.id,(user_paper.subjective_scores+user_paper.objective_score) as chengji,user_paper.paper_id,user_paper.paper_status,test_paper.paper_name,test_paper.start_time,test_paper.end_time,test_paper.total_score,test_paper.pass_score
+from user_paper
+LEFT JOIN user on user_paper.user_id=user.id
+LEFT JOIN test_paper on test_paper.paper_id=user_paper.paper_id
+where user_paper.paper_id=#{paperId}
+</select>
+
+<!--发布成绩-->
+<update id="updChengji">
+ update user_paper set paper_status=2  where paper_id=#{paperId}
+</update>
+
+<!--考卷详情-->
+<resultMap id="paperQu" type="PaperQuestions" autoMapping="true">
+        <id property="id" column="id"></id>
+        <association property="allQuestions" javaType="AllQuestions" autoMapping="true">
+            <id property="questionsId" column="questions_id"></id>
+            <collection property="allAnswers" ofType="AllAnswer" autoMapping="true">
+            </collection>
+        </association>
+    <association property="userQuestions" javaType="UserQuestions" autoMapping="true">
+    </association>
+</resultMap>
+
+<select id="SJShow" resultMap="paperQu">
+        select * from paper_questions pq
+        LEFT JOIN all_questions aq on pq.questions_id=aq.questions_id
+        LEFT JOIN all_answer aa on aq.questions_id=aa.questions_id
+        LEFT JOIN user_questions on user_questions.questions_id=pq.questions_id
+        <where>
+            <if test="id!='' and id!=0">
+                and pq.paper_id=#{id}
+            </if>
+        </where>
+    order by aa.answer_index
+</select>
+
+</mapper>

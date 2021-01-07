@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bgs.mapper.EmployeesMapper">
+
+
+    <!--试卷库全查-->
+    <select id="countType" resultType="TestPaper">
+        SELECT DISTINCT
+        test_paper.paper_name,
+        test_paper.paper_id,
+         user.username,
+        test_paper.create_time,
+        assistcollection.assiststates,
+        assistcollection.collectionstates,
+        assistcollection.user_id
+        FROM
+        test_paper
+        LEFT JOIN
+        assistcollection
+        ON
+        assistcollection.paper_id = test_paper.paper_id
+        LEFT JOIN
+        user
+        ON
+        user.id = assistcollection.user_id
+        <if test="collectionstates!=0 and collectionstates!='' ">
+            and assistcollection.collectionstates = #{collectionstates}
+        </if>
+        <if test="paperName!=0 and paperName!='' ">
+            and test_paper.paper_name like '%${paperName}%'
+        </if>
+        <if test="startTime!=0 and startTime!='' ">
+            and #{startTime} &lt; test_paper.create_time
+        </if>
+        <if test="endTime!=0 and endTime!='' ">
+        and test_paper.create_time &lt; #{endTime}
+        </if>
+    </select>
+
+<!--//添加表-->
+    <!--void insertAssistcollection();-->
+    <insert id="insertAssistcollection">
+        INSERT INTO assistcollection ( paper_id, user_id)
+        SELECT paper_id,user_id FROM test_paper ,user WHERE NOT EXISTS (
+            SELECT test_paper. paper_id,user.id
+            FROM test_paper,user,assistcollection
+		    WHERE test_paper.paper_id = assistcollection.paper_id
+		    AND user.id = assistcollection.user_id
+        )
+    </insert>
+
+    <!--    //点赞-->
+    <!--    int updateAssistStatus(Integer paperId,Integer userId);-->
+    <update id="updateAssistStatus">
+        update assistcollection set
+        assiststates =(
+	        case
+	            when assiststates = 0 then 1
+	            when assiststates = 1 then 0
+	        else 1 end
+        )
+        WHERE paper_id=#{paperId}
+        and user_id = #{userId}
+    </update>
+
+    <!--    //收藏-->
+    <!--    int updateCollectionStatus(Integer paperId,Integer userId);-->
+    <update id="updateCollectionStatus">
+        update assistcollection set
+        collectionstates =(
+	        case
+	            when collectionstates = 0 then 1
+	            when collectionstates = 1 then 0
+	        else 1 end
+        )
+        WHERE paper_id=#{paperId}
+        and user_id = #{userId}
+    </update>
+
+    <!--    //试卷库查询题目数量-->
+    <select id="selectOneQuestionCountOfQuestionBankByPaperID" resultType="TestPaper">
+        SELECT DISTINCT test_paper.paper_name,test_paper.paper_id,peixun_kaoshi.`user`.username,
+	        (SELECT COUNT( type ) FROM all_questions,test_paper,user_questions WHERE type = 1
+          AND all_questions.questions_id = user_questions.questions_id
+		  AND test_paper.paper_id = user_questions.paper_id AND test_paper.paper_id =#{paperId}) AS danxuan,
+         (SELECT COUNT( type ) FROM all_questions,test_paper,user_questions WHERE type = 2
+          AND all_questions.questions_id = user_questions.questions_id
+		  AND test_paper.paper_id = user_questions.paper_id AND test_paper.paper_id =#{paperId}) AS duoxuan,
+	        (SELECT COUNT( type ) FROM all_questions,test_paper,user_questions WHERE type = 3
+          AND all_questions.questions_id = user_questions.questions_id
+		  AND test_paper.paper_id = user_questions.paper_id AND test_paper.paper_id =#{paperId}) AS panduan,
+	        (SELECT COUNT( type ) FROM all_questions,test_paper,user_questions WHERE type = 4
+          AND all_questions.questions_id = user_questions.questions_id
+		  AND test_paper.paper_id = user_questions.paper_id AND test_paper.paper_id =#{paperId}) AS tiankong,
+	        (SELECT COUNT( type ) FROM all_questions,test_paper, user_questions WHERE type = 5
+          AND all_questions.questions_id = user_questions.questions_id
+		  AND test_paper.paper_id = user_questions.paper_id AND test_paper.paper_id =#{paperId}) AS jianda
+          FROM
+	    test_paper
+        LEFT JOIN user_questions ON user_questions.paper_id = test_paper.paper_id
+        LEFT JOIN all_questions ON all_questions.questions_id = user_questions.questions_id
+        LEFT JOIN peixun_kaoshi.`user` ON peixun_kaoshi.`user`.id = user_questions.user_id
+        WHERE
+        test_paper.paper_id =#{paperId}
+    </select>
+
+<!--展示试卷-->
+    <resultMap id="paperQu" type="PaperQuestions" autoMapping="true">
+        <id property="id" column="id"></id>
+        <association property="allQuestions" javaType="AllQuestions" autoMapping="true">
+            <id property="questionsId" column="questions_id"></id>
+            <collection property="allAnswers" ofType="AllAnswer" autoMapping="true">
+            </collection>
+        </association>
+    </resultMap>
+
+    <select id="PaperQuestions" resultMap="paperQu">
+        select * from paper_questions pq
+        LEFT JOIN all_questions aq on pq.questions_id=aq.questions_id
+        LEFT JOIN all_answer aa on aq.questions_id=aa.questions_id
+        <where>
+            <if test="id!=null and id!=0">
+                and pq.paper_id=#{id}
+            </if>
+        </where>
+    </select>
+
+</mapper>
