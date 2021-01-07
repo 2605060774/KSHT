@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class AllQuestions {
+public class AllQuestionsVue {
 
   private String questionsId;
   private String questions;
@@ -22,5 +22,17 @@ public class AllQuestions {
   private String endTime;
   private String token;
   private List<AllAnswer> allAnswers;
+
+
+  public void setAnswerIds(String[] choiceAnswerIds) {
+    StringBuffer sb = new StringBuffer();
+    for (int i = 0; i < choiceAnswerIds.length; i++) {
+      sb.append(choiceAnswerIds[i]);
+      if ((i + 1) != choiceAnswerIds.length) {
+        sb.append(",");
+      }
+    }
+    this.answerIds = sb.toString();
+  }
 
 }
