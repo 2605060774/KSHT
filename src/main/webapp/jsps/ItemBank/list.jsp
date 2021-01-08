@@ -72,7 +72,7 @@
             align="right">
         </el-date-picker>
         <el-button @click="chaxun()" icon="el-icon-search">搜索</el-button>
-        <el-tabs style="margin-top:50px;">
+        <el-tabs style="margin-top:12px;">
             <el-tab-pane label="我的题库">
                 <el-button @click="addQuestions()" icon="el-icon-upload">同步至共享库</el-button>
                 <template>
@@ -80,6 +80,7 @@
                             :data="myQuestions.slice((currentPage-1)*pagesize,currentPage*pagesize)"
                             style="width: 100%; height: 79%">
                         <el-table-column
+                                :selectable="checkSelect"
                                 type="selection">
                         </el-table-column>
                         <el-table-column
@@ -506,9 +507,22 @@
                 console.log("ad");
                 console.log("ad");
             },*/
+            /**
+             * row：当前行数据
+             * index：当前第几位
+             */
+            checkSelect (row,index) {
+                let isChecked = true;
+                if (row.isShare === 0) { // 判断里面是否存在某个参数
+                    isChecked = true
+                } else {
+                    isChecked = false
+                }
+                return isChecked
+            },
             addQuestionsCheckboxDel(i){
                 var _this=this;
-                if(_this.addQuestions.type==1){
+                if(_this.addQuestions.type==2){
                     if(_this.addQuestions.allAnswers.length<=3){
                         _this.$message({
                             showClose: true,
@@ -648,6 +662,7 @@
                     _this.dimList.startTime=this.dateToString(this.value2[0]);
                     _this.dimList.endTime=this.dateToString(this.value2[1]);
                 }
+                _this.currentPage=1;
                 _this.list();
                 _this.shareList();
             },
