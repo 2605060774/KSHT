@@ -15,15 +15,18 @@
     <script src="/bootstrap/table/bootstrap-table.js"></script>
     <script src="/bootstrap/js/bootstrap-tab.js"></script>
     <script src="/bootstrap/js/bootstrap.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap-tab.css">
+    <meta http-equiv="Content-Type" content="application/msword; charset=gb2312"/>
 </head>
 <body>
-
+<div id="fff">
 <%--<input type="hidden" class="form-control" id="userId" name="userId" value="">--%>
 <input type="hidden" class="form-control" id="username" name="username" value="">
 
-<div class="container">
+<div   class="container">
     <div class="row">
         <div class="col-xs-6 col-sm-12">
             共享时间：<input type="date" id="startTime" name="startTime">——<input type="date"
@@ -42,13 +45,13 @@
             </select>
         </div>
         <div class="col-xs-6 col-sm-4">
-            <input type="button" id="selbysome" value="查询"><input type="button" id="clean" value="重置"><input
-                type="button" id="daochu" value="导出">
+            <input type="button" id="selbysome" value="查询"><input type="button" id="daochu" value="导出"><input type="button" id="clean" value="重置">
         </div>
-
     </div>
 </div>
+
 <table id="selectAllQuestionBankBySome"></table>
+
 <div class="modal fade" id="selectOneQuestionCountOfQuestionBankByPaperID" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="width: 1000px">
         <div class="modal-content">
@@ -62,7 +65,7 @@
                 <form class="form-horizontal" role="form" id="SelOneModalForm" novalidate="novalidate">
                     <input type="hidden" id="formpaperoid">
                     <div class="form-group">
-                        <div class="col-sm-12">
+                        <div class="col-sm-12" >
                             <table class="table">
                                 <caption>
                                     试卷名称：<span id="tabpaperName"></span>&nbsp;&nbsp;&nbsp;创建者：<span id="tabusername"></span>
@@ -99,7 +102,12 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
+</div>
 <script>
+
+
+
+
     $(function () {
         $.ajax({
             url: "/Employees/insertAssistcollection",
@@ -180,6 +188,11 @@
             ]
         });
     }
+
+
+
+
+
 
     //点赞
     function updateAssistStatus(paperId,userId) {
@@ -265,7 +278,7 @@
         var startTime = $("#startTime").val()
         var endTime = $("#endTime").val()
 
-
+        //查询
         $("#selectAllQuestionBankBySome").bootstrapTable({
             url: '/Employees/countType',
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",//发送到服务器的编码类型
@@ -354,6 +367,29 @@
     $("#selpaperquestion").click(function () {
         var paperId = $("#formpaperoid").val()
         window.location.href = "http://localhost:8080/jsps/Employees/infoShow.jsp?pa="+paperId
+    })
+
+
+    $("#daochu").click(function () {
+
+
+        var pdf = new jsPDF('', 'pt', 'a4');
+        console.log("1")
+        pdf.internal.scaleFactor = 2; //调节打印大小，数字越大打印越小
+        console.log("2")
+        var options = {
+            pagesplit: true //设置是否自动分页
+        };
+        console.log("3")
+        $('#fff').css("background", "#fff")//如果导出的pdf为黑色背景，需要将导出的html模块内容背景 设置成白色。
+        console.log("4")
+        var printHtml = $('#fff').get(0);   // 通过id获取div内容
+        console.log(printHtml)
+        pdf.addHTML(printHtml, 15, 15, options, function () {
+            pdf.save('123.pdf');
+        });
+
+
     })
 </script>
 </body>

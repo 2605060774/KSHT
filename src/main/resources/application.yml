@@ -42,7 +42,7 @@ mybatis:
 
 server:
 #修改端口号
-  port: 8080
+  port: 8081
 
 #jsp的热部署
   jsp-servlet:
