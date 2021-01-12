@@ -67,7 +67,7 @@
                                         <%--<input type="hidden" :value="item.questionsScore">
                                         <input type="hidden" :value="item.allQuestions.answer">--%>
                                         <div class="test_content_nr_tt">
-                                            <i>{{i+1}}</i><span>({{item.questionsScore}}分)</span><font>{{item.allQuestions.questions}}</font><b class="icon iconfont">&#xe881;</b>
+                                            <i>{{i+1}}</i><span>({{item.questionsScore}}分)</span><font>{{item.allQuestions.questions}}</font><b class="icon iconfont">得分：{{item.userQuestions.score}}分</b>
                                         </div>
 
                                         <div class="test_content_nr_main">
@@ -106,7 +106,7 @@
                                         <input type="hidden" :value="item.questionsScore">
                                         <input type="hidden" :value="item.allQuestions.answer">
                                         <div class="test_content_nr_tt">
-                                            <i>{{i+1}}</i><span>({{item.questionsScore}}分)</span><font>{{item.allQuestions.questions}}</font><b class="icon iconfont">&#xe881;</b>
+                                            <i>{{i+1}}</i><span>({{item.questionsScore}}分)</span><font>{{item.allQuestions.questions}}</font><b class="icon iconfont">得分：{{item.userQuestions.score}}分</b>
                                         </div>
 
                                         <div class="test_content_nr_main">
@@ -145,7 +145,7 @@
                                         <input type="hidden" :value="item.questionsScore">
                                         <input type="hidden" :value="item.allQuestions.answer">
                                         <div class="test_content_nr_tt">
-                                            <i>{{i+1}}</i><span>({{item.questionsScore}}分)</span><font>{{item.allQuestions.questions}}</font><b class="icon iconfont">&#xe881;</b>
+                                            <i>{{i+1}}</i><span>({{item.questionsScore}}分)</span><font>{{item.allQuestions.questions}}</font><b class="icon iconfont">得分：{{item.userQuestions.score}}分</b>
                                         </div>
 
                                         <div class="test_content_nr_main">
@@ -194,7 +194,7 @@
                                         <input type="hidden" :value="item.questionsScore">
                                         <input type="hidden" :value="item.allQuestions.answer">
                                         <div class="test_content_nr_tt">
-                                            <i>{{i+1}}</i><span>({{item.questionsScore}}分)</span><font>{{item.allQuestions.questions}}</font><b class="icon iconfont">&#xe881;</b>
+                                            <i>{{i+1}}</i><span>({{item.questionsScore}}分)</span><font>{{item.allQuestions.questions}}</font><b class="icon iconfont"><input type="text" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" style="width:50px;border-bottom: 1px solid #f48c27;border-top: 0px;border-left: 0px;border-right: 0px;outline: none">分</b>
                                         </div>
 
                                         <div class="test_content_nr_main">
@@ -231,7 +231,7 @@
                                         <input type="hidden" :value="item.questionsScore">
                                         <input type="hidden" :value="item.allQuestions.answer">
                                         <div class="test_content_nr_tt">
-                                            <i>{{i+1}}</i><span>({{item.questionsScore}}分)</span><font>{{item.allQuestions.questions}}</font><b class="icon iconfont">&#xe881;</b>
+                                            <i>{{i+1}}</i><span>({{item.questionsScore}}分)</span><font>{{item.allQuestions.questions}}</font><b class="icon iconfont"><input type="text" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" style="width:50px;border-bottom: 1px solid #f48c27;border-top: 0px;border-left: 0px;border-right: 0px;outline: none">分</b>
                                         </div>
 
                                         <div class="test_content_nr_main">
@@ -259,6 +259,7 @@
                         </div>
 
                     </form>
+                    <el-button type="primary" style="margin-left: 820px" round>发布</el-button>
                 </div>
             </div>
         </div>

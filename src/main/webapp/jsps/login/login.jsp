@@ -239,7 +239,7 @@
                             sessionStorage.removeItem("userName");
                             sessionStorage.setItem("Token",response.data[1]);
                             sessionStorage.setItem("userName",response.data[0]);
-                            window.location.href = "${pageContext.request.contextPath}/jsps/leftTree/Tree.jsp";
+                            window.location.href = "${pageContext.request.contextPath}/jsps/login/Tree.jsp";
                             _this.$refs['loginForm'].resetFields();
                         }
                     })
@@ -345,7 +345,7 @@
 
 <style lang='less' scoped>
     body{
-        background-image:url(${pageContext.request.contextPath}/static/images/Starry.jpg);
+        background-image:url(${pageContext.request.contextPath}/images/Starry.jpg);
         background-position:center;
         background-size: cover;
         background-repeat:no-repeat;

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bgs.mapper.DongMapper">
+
+    <select id="selUserInfoByName" resultType="user">
+        select * from user
+        <where>
+            role_id=2
+            <if test="username!=null and username!=''">
+                and username=#{username}
+            </if>
+            <if test="password!=null and password!=''">
+                and password=#{password}
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="Questions" type="AllQuestions" autoMapping="true">
+        <id property="questionsId" column="questions_id"></id>
+        <collection property="allAnswers" ofType="AllAnswer" autoMapping="true">
+        </collection>
+    </resultMap>
+
+    <select id="listAllQuestions" resultMap="Questions">
+        select * from all_questions aq
+        left join all_answer aa on aq.questions_id=aa.questions_id
+        <where>
+            <if test="userId!=null and userId!=0">
+                and aq.user_id=#{userId}
+            </if>
+            <if test="questions!=null and questions!=''">
+                and aq.questions like "%"#{questions}"%"
+            </if>
+            <if test="type!=null and type!=0">
+                and aq.type=#{type}
+            </if>
+            <if test="startTime!=null and startTime!='' and endTime!=null and endTime!=''">
+                and aq.create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+        </where>
+        order by aa.answer_index
+    </select>
+
+    <select id="shareListQuestions" resultMap="Questions">
+        select * from all_questions aq
+        left join all_answer aa on aq.questions_id=aa.questions_id
+        <where>
+            <if test="userId!=null and userId!=0">
+                and aq.is_share=1
+            </if>
+            <if test="questions!=null and questions!=''">
+                and aq.questions like "%"#{questions}"%"
+            </if>
+            <if test="type!=null and type!=0">
+                and aq.type=#{type}
+            </if>
+            <if test="startTime!=null and startTime!='' and endTime!=null and endTime!=''">
+                and aq.create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+        </where>
+        order by aa.answer_index
+    </select>
+
+
+    <insert id="addQuestions" parameterType="AllQuestionsVue">
+        insert into
+        all_questions(id,questions_id,questions,answer,type,judge_answer,answer_ids,difficulty,is_share,user_id,create_time)
+        values(null,#{questionsId},#{questions},#{answer},#{type},#{judgeAnswer},#{answerIds},#{difficulty},#{isShare},#{userId},now())
+    </insert>
+
+    <insert id="addAnswer" parameterType="AllAnswer">
+    insert into all_answer(answer_id,content,answer_index,questions_id,user_id,create_time)
+    values
+        <foreach collection="list" item="ans" separator=",">
+            (#{ans.answerId},#{ans.content},#{ans.answerIndex},#{ans.questionsId},#{ans.userId},now())
+        </foreach>
+    </insert>
+</mapper>
