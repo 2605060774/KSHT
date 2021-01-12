@@ -163,7 +163,7 @@
                 type: 2,//类型
                 area: ['' +
                 '700px', '700px'],//定义宽和高
-                title: '新增文章',//题目
+                title: '新增考试',//题目
                 shadeClose: false,//点击遮罩层关闭
                 content: 'AddExam.jsp',//打开的内容  "{:url('addarticle')}"
             });

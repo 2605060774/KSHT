@@ -23,4 +23,8 @@ public class PcController {
         LayuiUtil<List<TestPaper>> listLayuiUtil=pcService.AllTestPaper(page,limit);
         return listLayuiUtil;
     }
+    @RequestMapping("AddTestPaper")
+    public Boolean AddTestPaper(TestPaper testPaper){
+        return false;
+    }
 }
