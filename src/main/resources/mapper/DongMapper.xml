@@ -70,6 +70,24 @@
         values(null,#{questionsId},#{questions},#{answer},#{type},#{judgeAnswer},#{answerIds},#{difficulty},#{isShare},#{userId},now())
     </insert>
 
+    <insert id="shareQuestionsXia" parameterType="TongQuestions">
+        insert into
+        all_questions(id,questions_id,questions,answer,type,judge_answer,answer_ids,difficulty,is_share,user_id,create_time)
+        values
+        <foreach collection="list" item="questions" separator=",">
+            (null,#{questions.questionsId},#{questions.questions},#{questions.answer},#{questions.type},#{questions.judgeAnswer},#{questions.answerIds},#{questions.difficulty},#{questions.isShare},#{questions.userId},now())
+        </foreach>
+    </insert>
+
+    <update id="myQuestionsShang" parameterType="TongQuestions">
+        <foreach collection="list" item="questions" separator=";">
+            update all_questions set is_share=1
+            <where>
+                questions_id=#{questions.questionsId} and user_id=#{questions.userId}
+            </where>
+        </foreach>
+    </update>
+
     <insert id="addAnswer" parameterType="AllAnswer">
     insert into all_answer(answer_id,content,answer_index,questions_id,user_id,create_time)
     values

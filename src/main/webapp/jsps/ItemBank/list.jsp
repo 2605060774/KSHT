@@ -74,11 +74,12 @@
         <el-button @click="chaxun()" icon="el-icon-search">搜索</el-button>
         <el-tabs style="margin-top:12px;">
             <el-tab-pane label="我的题库">
-                <el-button @click="addQuestions()" icon="el-icon-upload">同步至共享库</el-button>
+                <el-button @click="tongbu()" icon="el-icon-upload">同步至共享库</el-button>
                 <template>
                     <el-table
                             :data="myQuestions.slice((currentPage-1)*pagesize,currentPage*pagesize)"
-                            style="width: 100%; height: 79%">
+                            style="width: 100%; height: 79%"
+                            @selection-change="mySelectionChange">
                         <el-table-column
                                 :selectable="checkSelect"
                                 type="selection">
@@ -155,12 +156,14 @@
                 </template>
             </el-tab-pane>
             <el-tab-pane label="共享题库">
-                <el-button style="" @click="addQuestions()" icon="el-icon-download">添加到我的题库</el-button>
+                <el-button style="" @click="xiazai()" icon="el-icon-download">添加到我的题库</el-button>
                 <template>
                     <el-table
-                            :data="shareQuestions.slice((currentPage-1)*pagesize,currentPage*pagesize)"
-                            style="width: 100%; height: 79%">
+                            :data="shareQuestions.slice((currentPages-1)*pagesize,currentPages*pagesize)"
+                            style="width: 100%; height: 79%"
+                            @selection-change="shareSelectionChange">
                         <el-table-column
+                                :selectable="shareCheckSelect"
                                 type="selection">
                         </el-table-column>
                         <el-table-column
@@ -224,10 +227,10 @@
                     </el-table>
                     <el-pagination
                             @size-change="handleSizeChange"
-                            @current-change="handleCurrentChange"
+                            @current-change="handleCurrentChanges"
                             :page-sizes="[5, 10, 15]"
                             :page-size="pagesize"
-                            :current-page="currentPage"
+                            :current-page="currentPages"
                             layout="total, sizes, prev, pager, next, jumper"
                             style="text-align:center"
                             :total="shareQuestions.length">
@@ -432,8 +435,11 @@
                     endTime:''
                 },
                 input:'0',
+                userId:0,
                 myQuestions:[],
                 shareQuestions:[],
+                myQuestionsShang:[],
+                shareQuestionsXia:[],
                 aaa:[],
                 addQuestions:{
                     questionsId:'',
@@ -463,6 +469,7 @@
                 chakanDrawer: false,
                 addQuestionsDialog: false,
                 currentPage: 1,
+                currentPages: 1,
                 pickerOptions: {
                     shortcuts: [{
                         text: '最近一周',
@@ -498,6 +505,41 @@
             handleClick(tab, event) {
                 console.log(tab, event);
             },
+
+            mySelectionChange(val) {
+                this.myQuestionsShang=val;
+            },
+
+            shareSelectionChange(val) {
+                this.shareQuestionsXia=val;
+            },
+            tongbu(){
+                var _this=this;
+                axios.post('/dong/myQuestionsShang',{
+                    questions:JSON.stringify(_this.myQuestionsShang)
+                })
+                    .then(function (response) {
+                        _this.list();
+                        _this.shareList();
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            xiazai(){
+                var _this=this;
+                axios.post('/dong/shareQuestionsXia',{
+                    questions:JSON.stringify(_this.shareQuestionsXia),
+                    token:sessionStorage.getItem("Token")
+                })
+                    .then(function (response) {
+                        _this.list();
+                        _this.shareList();
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
             /*dongdong:function(){
                 var _this=this;
                 _this.aaa=[];
@@ -513,11 +555,28 @@
              */
             checkSelect (row,index) {
                 let isChecked = true;
-                if (row.isShare === 0) { // 判断里面是否存在某个参数
+                if (row.isShare == 0) { // 判断里面是否存在某个参数
                     isChecked = true
                 } else {
                     isChecked = false
                 }
+                return isChecked
+            },
+
+            shareCheckSelect (row,index) {
+                let isChecked = true;
+                var _this=this;
+                /*for (let i = 0; i <_this.myQuestions.length; i++) {
+                    if(row.questionsId=='68de_1610005374409_81428' && _this.myQuestions[i].questionsId=='68de_1610005374409_81428'){
+                        console.log(_this.myQuestions[i].questionsId);
+                        console.log(row.questionsId);
+                    }
+                    if (_this.myQuestions[i].questionsId==row.questionsId && _this.userId==row.userId) { // 判断里面是否存在某个参数
+                        isChecked = true
+                    } else {
+                        isChecked = false
+                    }
+                }*/
                 return isChecked
             },
             addQuestionsCheckboxDel(i){
@@ -663,11 +722,15 @@
                     _this.dimList.endTime=this.dateToString(this.value2[1]);
                 }
                 _this.currentPage=1;
+                _this.currentPages=1;
                 _this.list();
                 _this.shareList();
             },
             handleCurrentChange(cpage) {
                 this.currentPage = cpage;
+            },
+            handleCurrentChanges(cpage) {
+                this.currentPages = cpage;
             },
             handleSizeChange(psize) {
                 this.pagesize = psize;
@@ -676,6 +739,17 @@
         mounted(){
             this.list();
             this.shareList();
+            var _this=this;
+            axios.post('/dong/parseAccessToken',{
+                token:sessionStorage.getItem("Token")
+            })
+                .then(function (response) {
+                    _this.userId=response.data;
+                    console.log(response.data)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         }
     })
 </script>

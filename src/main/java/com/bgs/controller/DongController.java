@@ -1,9 +1,7 @@
 package com.bgs.controller;
 
-import com.bgs.pojo.AccessTokenDto;
-import com.bgs.pojo.AllQuestions;
-import com.bgs.pojo.AllQuestionsVue;
-import com.bgs.pojo.User;
+import com.alibaba.fastjson.JSONArray;
+import com.bgs.pojo.*;
 import com.bgs.service.DongService;
 import com.bgs.util.VerifyCodeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/dong")
@@ -68,6 +67,14 @@ public class DongController {
         return list;
     }
 
+
+    @ResponseBody
+    @RequestMapping("/parseAccessToken")
+    public Integer parseAccessToken(@RequestBody AllQuestions questions) throws Exception  {
+        AccessTokenDto token = dongService.parseAccessToken(questions.getToken());
+        return token.getUserId();
+    }
+
     @ResponseBody
     @RequestMapping("/shareListQuestions")
     public List<AllQuestions> shareListQuestions(@RequestBody AllQuestions questions) throws Exception  {
@@ -75,6 +82,27 @@ public class DongController {
         questions.setUserId(token.getUserId());
         List<AllQuestions> list= dongService.shareListQuestions(questions);
         return list;
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/myQuestionsShang")
+    public Boolean myQuestionsShang(@RequestBody Map<String,String> map) throws Exception  {
+        List<TongQuestions> questions = JSONArray.parseArray(map.get("questions"), TongQuestions.class);
+        Boolean a=dongService.myQuestionsShang(questions);
+        return true;
+    }
+
+    @ResponseBody
+    @RequestMapping("/shareQuestionsXia")
+    public Boolean shareQuestionsXia(@RequestBody Map<String,String> map) throws Exception  {
+        List<TongQuestions> questions = JSONArray.parseArray(map.get("questions"), TongQuestions.class);
+        AccessTokenDto token = dongService.parseAccessToken(map.get("token"));
+        for (TongQuestions t :questions) {
+            t.setUserId(token.getUserId());
+        }
+        Boolean a=dongService.shareQuestionsXia(questions);
+        return true;
     }
 
 

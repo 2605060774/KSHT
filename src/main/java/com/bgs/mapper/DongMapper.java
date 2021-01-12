@@ -1,9 +1,6 @@
 package com.bgs.mapper;
 
-import com.bgs.pojo.AllAnswer;
-import com.bgs.pojo.AllQuestions;
-import com.bgs.pojo.AllQuestionsVue;
-import com.bgs.pojo.User;
+import com.bgs.pojo.*;
 
 import java.util.List;
 
@@ -17,4 +14,8 @@ public interface DongMapper {
     Boolean addAnswer(List<AllAnswer> allAnswers);
 
     List<AllQuestions> shareListQuestions(AllQuestions questions);
+
+    Boolean myQuestionsShang(List<TongQuestions> questions);
+
+    Boolean shareQuestionsXia(List<TongQuestions> questions);
 }

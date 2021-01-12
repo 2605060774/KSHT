@@ -137,7 +137,6 @@
                 label="操作">
             <template slot-scope="scope" style="align-content: center">
                 <el-link @click="findById(scope.row)" size="small" type="primary">考试详情</el-link>
-                <el-link @click=""size="small" type="primary" round>导出试卷</el-link>
             </template>
         </el-table-column>
     </el-table>

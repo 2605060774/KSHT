@@ -15,6 +15,7 @@ public class AllAnswer {
 
 
 
+
   public void setCompletion(String[] completion) {
     StringBuffer sb = new StringBuffer();
     for (int i = 0; i < completion.length; i++) {

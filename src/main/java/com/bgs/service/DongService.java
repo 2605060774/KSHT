@@ -1,10 +1,7 @@
 package com.bgs.service;
 
 import com.bgs.mapper.DongMapper;
-import com.bgs.pojo.AccessTokenDto;
-import com.bgs.pojo.AllQuestions;
-import com.bgs.pojo.AllQuestionsVue;
-import com.bgs.pojo.User;
+import com.bgs.pojo.*;
 import com.bgs.util.BaseResponse;
 import com.bgs.util.Constant;
 import com.bgs.util.EncryptUtil;
@@ -105,5 +102,13 @@ public class DongService {
 
     public List<AllQuestions> shareListQuestions(AllQuestions questions) {
         return dongMapper.shareListQuestions(questions);
+    }
+
+    public Boolean myQuestionsShang(List<TongQuestions> questions) {
+        return dongMapper.myQuestionsShang(questions);
+    }
+
+    public Boolean shareQuestionsXia(List<TongQuestions> questions) {
+        return dongMapper.shareQuestionsXia(questions);
     }
 }
